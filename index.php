@@ -5,6 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HeroCorp - Gestion des Héros</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: none;
+            z-index: 1050;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        #backToTop:hover {
+            background-color: #0056b3;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+
+        /*#backToTop.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }*/
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -107,7 +148,7 @@ $heroes=$request->fetchAll();
 
 // Formulaire de recherche
 echo '
-    <div class="card mb-4">
+    <div class="card mb-4 sticky-top">
         <div class="card-body">
             <form action="index.php" method="get" class="row g-3">
                 <div class="col-auto">
@@ -239,9 +280,35 @@ echo '
     echo '</div>';
 echo '</div>';
 ?>
-
     </div>
 
+    <!-- Bouton Back to Top -->
+    <button id="backToTop" title="Retour en haut">
+        ↑
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Récupération du bouton
+        const backToTopButton = document.getElementById('backToTop');
+
+        // Afficher/Masquer le bouton lors du scroll
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('show');
+            } else {
+                backToTopButton.classList.remove('show');
+            }
+        });
+
+        // Remonter en haut lors du clic
+        backToTopButton.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
