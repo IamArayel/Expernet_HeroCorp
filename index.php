@@ -164,8 +164,8 @@ foreach ($heroes as $hero) {
     <td>".$hero->getPower()."</td>
     <td>".$hero->getWeakness()."</td>
     <td>
-        <a href=\"index.php?edit=".$hero->getId()."\">EDIT</a>
-        <a href=\"index.php?delete=".$hero->getId()."\" onclick=\"return confirm('Confirmer la suppression ?');\">SUPPR</a>
+        <button onclick=\"window.location.href='index.php?edit=".$hero->getId()."'\">EDIT</button>
+        <button onclick=\"window.location.href='index.php?delete=".$hero->getId()."'\">DELETE</button>
     </td>
     </tr>";
 }
