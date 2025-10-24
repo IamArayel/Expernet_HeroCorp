@@ -201,7 +201,7 @@ echo '
     </div>';
 
 // Affichage du tableau des héros
-echo '<div class="card">';
+echo '<div class="card mb-5">';
 echo '<div class="card-header bg-dark text-white">';
 echo '<h5 class="mb-0">Liste des héros ('.count($heroes).')</h5>';
 echo '</div>';
