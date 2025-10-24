@@ -10,7 +10,7 @@ $host="localhost";
 $db=new PDO("mysql:host=$host;dbname=$dbname",$user,$pass);
 
 // Gestion des actions CRUD (POST/GET)
-$editHero = null; // servira à pré-remplir le formulaire d'édition
+$editHero = null; // servira à préremplir le formulaire d'édition
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mode'])) {
     $mode = $_POST['mode'];
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mode'])) {
     $weakness = isset($_POST['weakness']) ? trim($_POST['weakness']) : '';
 
     if ($mode === 'create') {
-        if ($name !== '' && $description !== '' && $power !== '' && $weakness !== '') {
+        if ($name !== '' && $description !== '') {
             $stmt = $db->prepare("INSERT INTO hero (name, description, power, weakness) VALUES (:name, :description, :power, :weakness)");
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':description', $description);
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mode'])) {
         }
     } elseif ($mode === 'update' && isset($_POST['id'])) {
         $id = (int)$_POST['id'];
-        if ($id > 0 && $name !== '' && $description !== '' && $power !== '' && $weakness !== '') {
+        if ($id > 0 && $name !== '' && $description !== '') {
             $stmt = $db->prepare("UPDATE hero SET name = :name, description = :description, power = :power, weakness = :weakness WHERE id = :id");
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':description', $description);
@@ -103,7 +103,7 @@ echo '
     <input type="submit" value="Search">
     </form>';
 
-// Edition d'un héros (si demandé)
+// Edition d'un héros
 if ($editHero instanceof Hero) {
     echo '
     <form action="index.php" method="post" style="margin-top:15px;padding:10px;border:1px solid #ccc;">
@@ -111,10 +111,10 @@ if ($editHero instanceof Hero) {
         <input type="hidden" name="mode" value="update">
         <input type="hidden" name="id" value="'.htmlspecialchars($editHero->getId()).'">
         <label for="edit_name">Nom du héros* :</label>
-        <input type="text" name="name" id="edit_name" value="'.htmlspecialchars($editHero->getName(), ENT_QUOTES).'">
+        <input type="text" name="name" id="edit_name" value=" required'.htmlspecialchars($editHero->getName(), ENT_QUOTES).'">
         <br>
         <label for="edit_description">Description* :</label>
-        <input type="text" name="description" id="edit_description" value="'.htmlspecialchars($editHero->getDescription(), ENT_QUOTES).'">
+        <input type="text" name="description" id="edit_description" value=" required'.htmlspecialchars($editHero->getDescription(), ENT_QUOTES).'">
         <br>
         <label for="edit_power">Pouvoir* :</label>
         <input type="text" name="power" id="edit_power" value="'.htmlspecialchars($editHero->getPower(), ENT_QUOTES).'">
