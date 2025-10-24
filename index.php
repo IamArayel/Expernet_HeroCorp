@@ -51,7 +51,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center mb-4">HeroCorp - Gestion des Héros</h1>
+        <h1 class="text-center mb-4"><i class="bi bi-incognito"></i> HeroCorp</h1>
 
 <?php
 include 'Hero.php';
@@ -201,8 +201,8 @@ if ($editHero instanceof Hero) {
                     <input type="text" name="weakness" id="edit_weakness" class="form-control" value="'.htmlspecialchars($editHero->getWeakness(), ENT_QUOTES).'">
                 </div>
                 
-                <button type="submit" class="btn btn-success">Enregistrer</button>
-                <a href="index.php" class="btn btn-secondary">Annuler</a>
+                <button type="submit" class="btn btn-success"><i class="bi bi-person-fill-check"></i> Enregistrer</button>
+                <a href="index.php" class="btn btn-secondary"><i class="bi bi-arrow-counterclockwise"></i> Annuler</a>
             </form>
         </div>
     </div>';
@@ -238,7 +238,7 @@ echo '
                     <input type="text" name="weakness" id="weakness" class="form-control">
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Ajouter</button>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-person-fill-add"></i> Ajouter</button>
             </form>
         </div>
     </div>';
