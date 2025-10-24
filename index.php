@@ -201,41 +201,42 @@ echo '
     </div>';
 
 // Affichage du tableau des héros
-echo '<div class="card mb-5">';
-echo '<div class="card-header bg-dark text-white">';
-echo '<h5 class="mb-0">Liste des héros ('.count($heroes).')</h5>';
-echo '</div>';
-echo '<div class="card-body p-0">';
-echo '<div class="table-responsive">';
-echo '<table class="table table-striped table-hover mb-0">';
-echo '<thead class="table-dark">';
-echo '<tr>';
-echo '<th>Nom du héros</th>';
-echo '<th>Description</th>';
-echo '<th>Pouvoir</th>';
-echo '<th>Faiblesse</th>';
-echo '<th class="text-center">Actions</th>';
-echo '</tr>';
-echo '</thead>';
-echo '<tbody>';
+    echo '<div class="card mb-5">';
+        echo '<div class="card-header bg-dark text-white">';
+            echo '<h5 class="mb-0">Liste des héros ('.count($heroes).')</h5>';
+        echo '</div>';
+        echo '<div class="card-body p-0">';
+            echo '<div class="table-responsive">';
+            echo '<table class="table table-striped table-hover mb-0">';
+                echo '<thead class="table-dark">';
+                    echo '<tr>';
+                    echo '<th>Nom du héros</th>';
+                    echo '<th>Description</th>';
+                    echo '<th>Pouvoir</th>';
+                    echo '<th>Faiblesse</th>';
+                    echo '<th class="text-center">Actions</th>';
+                    echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
 
-foreach ($heroes as $hero) {
-    echo "<tr>
-    <td><strong>".$hero->getName()."</strong></td>
-    <td>".$hero->getDescription()."</td>
-    <td>".$hero->getPower()."</td>
-    <td>".$hero->getWeakness()."</td>
-    <td class='text-center'>
-        <a href='index.php?edit=".$hero->getId()."' class='btn btn-sm btn-warning'>Modifier</a>
-        <a href='index.php?delete=".$hero->getId()."' class='btn btn-sm btn-danger' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce héros ?\")'>Supprimer</a>
-    </td>
-    </tr>";
-}
+                foreach ($heroes as $hero) {
+                    echo "
+                        <tr>
+                        <td><strong>".$hero->getName()."</strong></td>
+                        <td>".$hero->getDescription()."</td>
+                        <td>".$hero->getPower()."</td>
+                        <td>".$hero->getWeakness()."</td>
+                        <td class='text-center'>
+                            <a href='index.php?edit=".$hero->getId()."' class='btn btn-sm btn-warning'>Modifier</a>
+                            <a href='index.php?delete=".$hero->getId()."' class='btn btn-sm btn-danger' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce héros ?\")'>Supprimer</a>
+                        </td>
+                    </tr>";
+                }
 
-echo '</tbody>';
-echo '</table>';
-echo '</div>';
-echo '</div>';
+                echo '</tbody>';
+            echo '</table>';
+        echo '</div>';
+    echo '</div>';
 echo '</div>';
 ?>
 
