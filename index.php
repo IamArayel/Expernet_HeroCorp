@@ -9,27 +9,68 @@ $host="localhost";
 
 $db=new PDO("mysql:host=$host;dbname=$dbname",$user,$pass);
 
-// Gestion de l'ajout (POST)
-if ($_SERVER['REQUEST_METHOD'] === 'POST'
-    && isset($_POST['name'], $_POST['description'], $_POST['power'], $_POST['weakness'])) {
-    $name = trim($_POST['name']);
-    $description = trim($_POST['description']);
-    $power = trim($_POST['power']);
-    $weakness = trim($_POST['weakness']);
+// Gestion des actions CRUD (POST/GET)
+$editHero = null; // servira à pré-remplir le formulaire d'édition
 
-    if ($name !== '' && $description !== '' && $power !== '' && $weakness !== '') {
-        $stmt = $db->prepare("INSERT INTO hero (name, description, power, weakness) VALUES (:name, :description, :power, :weakness)");
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':description', $description);
-        $stmt->bindParam(':power', $power);
-        $stmt->bindParam(':weakness', $weakness);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mode'])) {
+    $mode = $_POST['mode'];
+    $name = isset($_POST['name']) ? trim($_POST['name']) : '';
+    $description = isset($_POST['description']) ? trim($_POST['description']) : '';
+    $power = isset($_POST['power']) ? trim($_POST['power']) : '';
+    $weakness = isset($_POST['weakness']) ? trim($_POST['weakness']) : '';
+
+    if ($mode === 'create') {
+        if ($name !== '' && $description !== '' && $power !== '' && $weakness !== '') {
+            $stmt = $db->prepare("INSERT INTO hero (name, description, power, weakness) VALUES (:name, :description, :power, :weakness)");
+            $stmt->bindParam(':name', $name);
+            $stmt->bindParam(':description', $description);
+            $stmt->bindParam(':power', $power);
+            $stmt->bindParam(':weakness', $weakness);
+            $stmt->execute();
+            header('Location: index.php');
+            exit;
+        } else {
+            echo "<p style='color:red'>Veuillez remplir tous les champs marqués d'un *.</p>";
+        }
+    } elseif ($mode === 'update' && isset($_POST['id'])) {
+        $id = (int)$_POST['id'];
+        if ($id > 0 && $name !== '' && $description !== '' && $power !== '' && $weakness !== '') {
+            $stmt = $db->prepare("UPDATE hero SET name = :name, description = :description, power = :power, weakness = :weakness WHERE id = :id");
+            $stmt->bindParam(':name', $name);
+            $stmt->bindParam(':description', $description);
+            $stmt->bindParam(':power', $power);
+            $stmt->bindParam(':weakness', $weakness);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            header('Location: index.php');
+            exit;
+        } else {
+            echo "<p style='color:red'>Veuillez remplir tous les champs marqués d'un *.</p>";
+        }
+    }
+}
+
+// Suppression (GET)
+if (isset($_GET['delete'])) {
+    $id = (int)$_GET['delete'];
+    if ($id > 0) {
+        $stmt = $db->prepare("DELETE FROM hero WHERE id = :id");
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-
-        // Redirection pour éviter la double soumission (PRG)
         header('Location: index.php');
         exit;
-    } else {
-        echo "<p style='color:red'>Veuillez remplir tous les champs marqués d'un *.</p>";
+    }
+}
+
+// Préparation de l'édition (GET)
+if (isset($_GET['edit'])) {
+    $id = (int)$_GET['edit'];
+    if ($id > 0) {
+        $stmt = $db->prepare("SELECT * FROM hero WHERE id = :id");
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Hero');
+        $editHero = $stmt->fetch();
     }
 }
 
@@ -62,10 +103,33 @@ echo '
     <input type="submit" value="Search">
     </form>';
 
+// Edition d'un héros (si demandé)
+if ($editHero instanceof Hero) {
+    echo '
+    <form action="index.php" method="post" style="margin-top:15px;padding:10px;border:1px solid #ccc;">
+        <h3>Modifier le héros #'.htmlspecialchars($editHero->getId()).'</h3>
+        <input type="hidden" name="mode" value="update">
+        <input type="hidden" name="id" value="'.htmlspecialchars($editHero->getId()).'">
+        <label for="edit_name">Nom du héros* :</label>
+        <input type="text" name="name" id="edit_name" value="'.htmlspecialchars($editHero->getName(), ENT_QUOTES).'">
+        <br>
+        <label for="edit_description">Description* :</label>
+        <input type="text" name="description" id="edit_description" value="'.htmlspecialchars($editHero->getDescription(), ENT_QUOTES).'">
+        <br>
+        <label for="edit_power">Pouvoir* :</label>
+        <input type="text" name="power" id="edit_power" value="'.htmlspecialchars($editHero->getPower(), ENT_QUOTES).'">
+        <label for="edit_weakness">Faiblesse* :</label>
+        <input type="text" name="weakness" id="edit_weakness" value="'.htmlspecialchars($editHero->getWeakness(), ENT_QUOTES).'">
+        <input type="submit" value="Enregistrer">
+        <a href="index.php" style="margin-left:10px;">Annuler</a>
+    </form>';
+}
+
 // Ajout d'un héros
 echo '
     <form action="index.php" method="post">
     <hr>
+    <input type="hidden" name="mode" value="create">
     <label for="name">Nom du héros* :</label>
     <input type="text" name="name" id="name">
     <br>
@@ -88,6 +152,7 @@ echo '<th>Nom du héros</th>';
 echo '<th>Description</th>';
 echo '<th>Pouvoir</th>';
 echo '<th>Faiblesse</th>';
+echo '<th>Actions</th>';
 echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
@@ -98,6 +163,10 @@ foreach ($heroes as $hero) {
     <td>".$hero->getDescription()."</td>
     <td>".$hero->getPower()."</td>
     <td>".$hero->getWeakness()."</td>
+    <td>
+        <a href=\"index.php?edit=".$hero->getId()."\">EDIT</a>
+        <a href=\"index.php?delete=".$hero->getId()."\" onclick=\"return confirm('Confirmer la suppression ?');\">SUPPR</a>
+    </td>
     </tr>";
 }
 
