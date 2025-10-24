@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HeroCorp - Gestion des Héros</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <style>
         #backToTop {
             position: fixed;
@@ -243,9 +244,6 @@ echo '
 
 // Affichage du tableau des héros
     echo '<div class="card mb-5">';
-        echo '<div class="card-header bg-dark text-white">';
-            echo '<h5 class="mb-0">Liste des héros ('.count($heroes).')</h5>';
-        echo '</div>';
         echo '<div class="card-body p-0">';
             echo '<div class="table-responsive">';
             echo '<table class="table table-striped table-hover mb-0">';
@@ -268,8 +266,8 @@ echo '
                         <td>".$hero->getPower()."</td>
                         <td>".$hero->getWeakness()."</td>
                         <td class='text-center'>
-                            <a href='index.php?edit=".$hero->getId()."' class='btn btn-sm btn-warning'>Modifier</a>
-                            <a href='index.php?delete=".$hero->getId()."' class='btn btn-sm btn-danger' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce héros ?\")'>Supprimer</a>
+                            <a href='index.php?edit=".$hero->getId()."' class='btn btn-sm btn-warning'><i class='bi bi-pencil-square'></i> Modifier</a>
+                            <a href='index.php?delete=".$hero->getId()."' class='btn btn-sm btn-danger' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce héros ?\")'><i class='bi bi-trash3'></i> Supprimer</a>
                         </td>
                     </tr>";
                 }
