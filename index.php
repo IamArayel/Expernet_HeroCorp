@@ -1,3 +1,15 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeroCorp - Gestion des Héros</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">HeroCorp - Gestion des Héros</h1>
+
 <?php
 include 'Hero.php';
 
@@ -30,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mode'])) {
             header('Location: index.php');
             exit;
         } else {
-            echo "<p style='color:red'>Veuillez remplir tous les champs marqués d'un *.</p>";
+            echo '<div class="alert alert-danger">Veuillez remplir tous les champs marqués d\'un *.</div>';
         }
     } elseif ($mode === 'update' && isset($_POST['id'])) {
         $id = (int)$_POST['id'];
@@ -45,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mode'])) {
             header('Location: index.php');
             exit;
         } else {
-            echo "<p style='color:red'>Veuillez remplir tous les champs marqués d'un *.</p>";
+            echo '<div class="alert alert-danger">Veuillez remplir tous les champs marqués d\'un *.</div>';
         }
     }
 }
@@ -74,8 +86,6 @@ if (isset($_GET['edit'])) {
     }
 }
 
-// $request=$db->query("select * from hero;");
-
 if(isset($_GET['search']) && !empty($_GET['search'])){
     $request=$db->prepare("select * from hero 
          where name like ? or description like ? or power like ? or weakness like ?");
@@ -97,78 +107,140 @@ $heroes=$request->fetchAll();
 
 // Formulaire de recherche
 echo '
-    <form action="index.php" method="get">
-    <label for="search">Rechercher</label>
-    <input type="text" name="search" id="search">
-    <input type="submit" value="Search">
-    </form>';
+    <div class="card mb-4">
+        <div class="card-body">
+            <form action="index.php" method="get" class="row g-3">
+                <div class="col-auto">
+                    <label for="search" class="col-form-label">Rechercher :</label>
+                </div>
+                <div class="col-auto">
+                    <input type="text" name="search" id="search" class="form-control" placeholder="Nom, description...">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i> Rechercher
+                    </button>
+                    <a href="index.php" class="btn btn-secondary">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+    </div>';
 
 // Edition d'un héros
 if ($editHero instanceof Hero) {
     echo '
-    <form action="index.php" method="post" style="margin-top:15px;padding:10px;border:1px solid #ccc;">
-        <h3>Modifier le héros #'.htmlspecialchars($editHero->getId()).'</h3>
-        <input type="hidden" name="mode" value="update">
-        <input type="hidden" name="id" value="'.htmlspecialchars($editHero->getId()).'">
-        <label for="edit_name">Nom du héros* :</label>
-        <input type="text" name="name" id="edit_name" value=" required'.htmlspecialchars($editHero->getName(), ENT_QUOTES).'">
-        <br>
-        <label for="edit_description">Description* :</label>
-        <input type="text" name="description" id="edit_description" value=" required'.htmlspecialchars($editHero->getDescription(), ENT_QUOTES).'">
-        <br>
-        <label for="edit_power">Pouvoir* :</label>
-        <input type="text" name="power" id="edit_power" value="'.htmlspecialchars($editHero->getPower(), ENT_QUOTES).'">
-        <label for="edit_weakness">Faiblesse* :</label>
-        <input type="text" name="weakness" id="edit_weakness" value="'.htmlspecialchars($editHero->getWeakness(), ENT_QUOTES).'">
-        <input type="submit" value="Enregistrer">
-        <a href="index.php" style="margin-left:10px;">Annuler</a>
-    </form>';
+    <div class="card mb-4 border-warning">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">Modifier le héros #'.htmlspecialchars($editHero->getId()).'</h5>
+        </div>
+        <div class="card-body">
+            <form action="index.php" method="post">
+                <input type="hidden" name="mode" value="update">
+                <input type="hidden" name="id" value="'.htmlspecialchars($editHero->getId()).'">
+                
+                <div class="mb-3">
+                    <label for="edit_name" class="form-label">Nom du héros* :</label>
+                    <input type="text" name="name" id="edit_name" class="form-control" value="'.htmlspecialchars($editHero->getName(), ENT_QUOTES).'" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="edit_description" class="form-label">Description* :</label>
+                    <input type="text" name="description" id="edit_description" class="form-control" value="'.htmlspecialchars($editHero->getDescription(), ENT_QUOTES).'" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="edit_power" class="form-label">Pouvoir :</label>
+                    <input type="text" name="power" id="edit_power" class="form-control" value="'.htmlspecialchars($editHero->getPower(), ENT_QUOTES).'">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="edit_weakness" class="form-label">Faiblesse :</label>
+                    <input type="text" name="weakness" id="edit_weakness" class="form-control" value="'.htmlspecialchars($editHero->getWeakness(), ENT_QUOTES).'">
+                </div>
+                
+                <button type="submit" class="btn btn-success">Enregistrer</button>
+                <a href="index.php" class="btn btn-secondary">Annuler</a>
+            </form>
+        </div>
+    </div>';
 }
 
 // Ajout d'un héros
 echo '
-    <form action="index.php" method="post">
-    <hr>
-    <input type="hidden" name="mode" value="create">
-    <label for="name">Nom du héros* :</label>
-    <input type="text" name="name" id="name">
-    <br>
-    <label for="description">Description* :</label>
-    <input type="text" name="description" id="description">
-    <br>
-    <label for="power">Pouvoir :</label>
-    <input type="text" name="power" id="power">
-    <label for="weakness">Faiblesse :</label>
-    <input type="text" name="weakness" id="weakness">
-    <input type="submit" value="Ajouter">
-
-</form>';
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Ajouter un nouveau héros</h5>
+        </div>
+        <div class="card-body">
+            <form action="index.php" method="post">
+                <input type="hidden" name="mode" value="create">
+                
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nom du héros* :</label>
+                    <input type="text" name="name" id="name" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description* :</label>
+                    <input type="text" name="description" id="description" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="power" class="form-label">Pouvoir :</label>
+                    <input type="text" name="power" id="power" class="form-control">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="weakness" class="form-label">Faiblesse :</label>
+                    <input type="text" name="weakness" id="weakness" class="form-control">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+            </form>
+        </div>
+    </div>';
 
 // Affichage du tableau des héros
-echo '<table border="5" cellpadding="10" style="border-collapse: collapse;">';
-echo '<thead>';
+echo '<div class="card">';
+echo '<div class="card-header bg-dark text-white">';
+echo '<h5 class="mb-0">Liste des héros ('.count($heroes).')</h5>';
+echo '</div>';
+echo '<div class="card-body p-0">';
+echo '<div class="table-responsive">';
+echo '<table class="table table-striped table-hover mb-0">';
+echo '<thead class="table-dark">';
 echo '<tr>';
 echo '<th>Nom du héros</th>';
 echo '<th>Description</th>';
 echo '<th>Pouvoir</th>';
 echo '<th>Faiblesse</th>';
-echo '<th>Actions</th>';
+echo '<th class="text-center">Actions</th>';
 echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
 
 foreach ($heroes as $hero) {
     echo "<tr>
-    <td>".$hero->getName()."</td>
+    <td><strong>".$hero->getName()."</strong></td>
     <td>".$hero->getDescription()."</td>
     <td>".$hero->getPower()."</td>
     <td>".$hero->getWeakness()."</td>
-    <td>
-        <button onclick=\"window.location.href='index.php?edit=".$hero->getId()."'\">EDIT</button>
-        <button onclick=\"window.location.href='index.php?delete=".$hero->getId()."'\">DELETE</button>
+    <td class='text-center'>
+        <a href='index.php?edit=".$hero->getId()."' class='btn btn-sm btn-warning'>Modifier</a>
+        <a href='index.php?delete=".$hero->getId()."' class='btn btn-sm btn-danger' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce héros ?\")'>Supprimer</a>
     </td>
     </tr>";
 }
 
 echo '</tbody>';
 echo '</table>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+?>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
