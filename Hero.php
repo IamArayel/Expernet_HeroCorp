@@ -1,5 +1,5 @@
 <?php
-class Heros {
+class Hero {
     private $id;
     private $name;
     private $description;
