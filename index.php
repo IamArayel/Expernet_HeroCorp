@@ -38,7 +38,7 @@ echo '
     <input type="submit" value="Search">
     </form>';
 
-// CRUD
+// Ajout d'un héros
 echo '
     <form action="index.php" method="post">
     <hr>
