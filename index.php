@@ -1,6 +1,7 @@
 <?php
 include 'Hero.php';
 
+//Connection à la base de données
 $user="root";
 $pass="";
 $dbname="herocorp";
@@ -26,14 +27,33 @@ else {
 }
 
 //récupérer la requête
-$request->setFetchMode(PDO::FETCH_CLASS, 'Heros');
+$request->setFetchMode(PDO::FETCH_CLASS, 'Hero');
 $heroes=$request->fetchAll();
 
 // Formulaire de recherche
-echo '<form action="index.php" method="get">
+echo '
+    <form action="index.php" method="get">
     <label for="search">Rechercher</label>
     <input type="text" name="search" id="search">
     <input type="submit" value="Search">
+    </form>';
+
+// CRUD
+echo '
+    <form action="index.php" method="post">
+    <hr>
+    <label for="name">Nom du héros :</label>
+    <input type="text" name="name" id="name">
+    <br>
+    <label for="description">Description :</label>
+    <input type="text" name="description" id="description">
+    <br>
+    <label for="power">Pouvoir :</label>
+    <input type="text" name="power" id="power">
+    <label for="weakness">Faiblesse :</label>
+    <input type="text" name="weakness" id="weakness">
+    <input type="submit" value="Ajouter">
+
 </form>';
 
 // Affichage du tableau des héros
