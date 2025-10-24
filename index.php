@@ -1,5 +1,5 @@
 <?php
-//include 'hero.php';
+include 'Hero.php';
 
 $user="root";
 $pass="";
@@ -8,25 +8,25 @@ $host="localhost";
 
 $db=new PDO("mysql:host=$host;dbname=$dbname",$user,$pass);
 
-$request=$db->query("select * from hero;");
+// $request=$db->query("select * from hero;");
 
-$request="";
-if(isset($_GET['search'])){
-    echo "coucou"; // pour tester, et ça s'affiche bien
+if(isset($_GET['search']) && !empty($_GET['search'])){
     $request=$db->prepare("select * from hero 
          where name like ? or description like ? or power like ? or weakness like ?");
 
     $valeur="%".$_GET['search']."%";
     $request->bindParam(1, $valeur);
-    $request->bindParam(2,$_GET['search']);
+    $request->bindParam(2, $valeur);
+    $request->bindParam(3, $valeur);
+    $request->bindParam(4, $valeur);
     $request->execute();
-
 }
-else $request=$db->query("select * from hero");
-
+else {
+    $request=$db->query("select * from hero");
+}
 
 //récupérer la requête
-$request->setFetchMode(PDO::FETCH_CLASS, 'Héros');
+$request->setFetchMode(PDO::FETCH_CLASS, 'Heros');
 $heroes=$request->fetchAll();
 
 // Formulaire de recherche
